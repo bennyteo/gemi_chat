@@ -1,5 +1,14 @@
+import streamlit as st
 import os
-import time
+import google.generativeai as genai
+
+"""
+Install the Google AI Python SDK
+
+$ pip install google-generativeai
+"""
+
+import os
 import google.generativeai as genai
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
@@ -19,21 +28,6 @@ model = genai.GenerativeModel(
   # safety_settings = Adjust safety settings
   # See https://ai.google.dev/gemini-api/docs/safety-settings
 )
-
-# Gemini uses 'model' for assistant; Streamlit uses 'assistant'
-def role_to_streamlit(role):
-  if role == "model":
-    return "assistant"
-  else:
-    return role
-
-# Add a Gemini Chat history object to Streamlit session state
-if "chat" not in st.session_state:
-    st.session_state.chat = model.start_chat(history = [])
-  
-# Display Form Title
-st.set_page_config(page_title="How can I help")
-st.title("AskME: Anything about Cointreau")
 
 chat_session = model.start_chat(
   history=[
@@ -66,22 +60,21 @@ chat_session = model.start_chat(
 
 response = chat_session.send_message("INSERT_INPUT_HERE")
 
-###
-# Display chat messages from history above current input box
+print(response.text)
+
+st.title("Cointreau Virtual Agent")
+
+# Streamlit chat interface
+if "chat" not in st.session_state:
+    st.session_state.chat = chat_session  # Initialize chat session
+
 for message in st.session_state.chat.history:
-    with st.chat_message(role_to_streamlit(message.role)):
+    with st.chat_message(message.role):
         st.markdown(message.parts[0].text)
 
-# Accept user's next message, add to context, resubmit context to Gemini
-if prompt := st.chat_input("I possess a well of knowledge. What would you like to know?"):
-    # Display user's last message
+# User input
+if prompt := st.chat_input("Ask me about Cointreau!"):
     st.chat_message("user").markdown(prompt)
-    
-    # Send user entry to Gemini and read the response
-    response = st.session_state.chat.send_message(prompt) 
-    
-    # Display last 
+    response = st.session_state.chat.send_message(prompt)
     with st.chat_message("assistant"):
         st.markdown(response.text)
-
-print(response.text)
