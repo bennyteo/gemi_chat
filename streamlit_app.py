@@ -49,7 +49,7 @@ if "chat" not in st.session_state:
     st.session_state.chat = chat_session
 
 for message in st.session_state.chat.history:
-    if message.role == "model" and message.parts[0].text.startswith("Understood!"):
+    if message.role == "model" and message.parts[1].text.startswith("Understood!"):
         break  # Stop displaying messages before the AI's confirmation
     with st.chat_message(message.role):
         st.markdown(message.parts[0].text)
