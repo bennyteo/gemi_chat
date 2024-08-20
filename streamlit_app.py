@@ -62,19 +62,20 @@ response = chat_session.send_message("INSERT_INPUT_HERE")
 
 print(response.text)
 
-st.title("Cointreau Virtual Agent")
+# Remove the initial prompts from the chat history
+chat_session.history = []  # Clear the history
+
+# Add a welcome message
+chat_session.send_message("Welcome to the Cointreau Virtual Agent! I'm ready to answer your questions about Cointreau. Ask me anything!")
 
 # Streamlit chat interface
 if "chat" not in st.session_state:
     st.session_state.chat = chat_session  # Initialize chat session
 
-for message in st.session_state.chat.history:
-    with st.chat_message(message.role):
-        st.markdown(message.parts[0].text)
+# Display the welcome message as the first message in the chat
+with st.chat_message("assistant"):
+    st.markdown(chat_session.history[0].parts[0].text)  # Display welcome message
 
 # User input
 if prompt := st.chat_input("Ask me about Cointreau!"):
     st.chat_message("user").markdown(prompt)
-    response = st.session_state.chat.send_message(prompt)
-    with st.chat_message("assistant"):
-        st.markdown(response.text)
