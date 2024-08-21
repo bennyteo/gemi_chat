@@ -158,10 +158,9 @@ Here are a list of recipes that can be recommended to the customer:
 chat_session = model.start_chat()
 
 st.title("Cointreau Virtual Agent")
-st.write(
-    "This is a Proof of Concept of a AI powered virtual sales agent. The agent has been trained on the Cointreau range of products "\n
-    "Just start with a simple Hi to the chat bot to start the interaction. Send any feedback or questions you have to skylark3121@gmail.com  "
-)
+st.write("This is a Proof of Concept of a AI powered virtual sales agent. The agent has been trained on the Cointreau range of products ")
+st.write("Just start with a simple Hi to the chat bot to start the interaction.")
+st.write(("Send any feedback or questions you have to skylark3121@gmail.com")
 # Streamlit chat interface
 if "chat" not in st.session_state:
     st.session_state.chat = chat_session  # Initialize chat session
