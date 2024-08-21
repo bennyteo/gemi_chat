@@ -2,26 +2,32 @@ import streamlit as st
 import os
 import google.generativeai as genai
 
-# --- API Setup and Model ---
+"""
+Install the Google AI Python SDK
+
+$ pip install google-generativeai
+"""
+
+import os
+import google.generativeai as genai
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-# Generation config
+# Create the model
 generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 64,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
+  "temperature": 1,
+  "top_p": 0.95,
+  "top_k": 64,
+  "max_output_tokens": 8192,
+  "response_mime_type": "text/plain",
 }
 
-# Create the model
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    generation_config=generation_config,
+  model_name="gemini-1.5-flash",
+  generation_config=generation_config,
+  # safety_settings = Adjust safety settings
+  # See https://ai.google.dev/gemini-api/docs/safety-settings
 )
-
-# --- Initial Chat History (with hidden training information) ---
 
 chat_session = model.start_chat(
   history=[
@@ -52,25 +58,22 @@ chat_session = model.start_chat(
   ]
 )
 
-# --- Streamlit Chat App ---
+response = chat_session.send_message("INSERT_INPUT_HERE")
+
+print(response.text)
 
 st.title("Cointreau Virtual Agent")
 
-# Display chat history (excluding initial training information)
+# Streamlit chat interface
 if "chat" not in st.session_state:
-    st.session_state.chat = chat_session
+    st.session_state.chat = chat_session  # Initialize chat session
 
 for message in st.session_state.chat.history:
-    with st.chat_message(role_to_streamlit(message.role)):
+    with st.chat_message(message.role):
         st.markdown(message.parts[0].text)
 
 # User input
 if prompt := st.chat_input("Ask me about Cointreau!"):
-    # Handle contextual prompts (optional)
-    if prompt.startswith("What is the price"):
-        prompt = "What is the price of Cointreau?"
-    # ... (Handle other contextual prompts)
-
     st.chat_message("user").markdown(prompt)
     response = st.session_state.chat.send_message(prompt)
     with st.chat_message("assistant"):
