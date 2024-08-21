@@ -2,15 +2,6 @@ import streamlit as st
 import os
 import google.generativeai as genai
 
-"""
-Install the Google AI Python SDK
-
-$ pip install google-generativeai
-"""
-
-import os
-import google.generativeai as genai
-
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Create the model
@@ -32,7 +23,7 @@ model = genai.GenerativeModel(
 chat_session = model.start_chat(
   history=[
     {
-      "role": "user",
+      "role": "system",
       "parts": [
         "You are a Sales Virtual agent for the liquor brand Cointreau at an international airport. Your task is to explain our Cointreau liquor to the customer, recommend cocktail recipes based on our recipe base and advise the price when asked.\nI will provide you with the information to reference from in the next few prompts. Only start being the sales agent when I say \"start the bot\". Switch back to learning mode when I type in \"admin2024\" and prepare yourself to receive more information thereafter.",
       ],
