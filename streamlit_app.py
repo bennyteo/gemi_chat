@@ -24,10 +24,6 @@ Here is the information you are to reference when providing the responses""",
 
 chat_session = model.start_chat()
 
-response = chat_session.send_message("INSERT_INPUT_HERE")
-
-print(response.text)
-
 st.title("Cointreau Virtual Agent")
 
 # Streamlit chat interface
